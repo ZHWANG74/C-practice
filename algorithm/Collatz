@@ -1,0 +1,56 @@
+//
+//  3n+1.cpp
+//  practing c++
+//
+//  Created by 呆呆 on 2022/9/24.
+//
+
+#include "3n+1.hpp"
+#include<iostream>
+#include<vector>
+
+using namespace std;
+//计算序列长度
+size_t iterator_calculate(size_t n) //直接计算
+{
+    if(n < 1)
+        return 0;
+    size_t L = 1;
+    while(n != 1){
+        (n%2 == 0)?n /= 2: 3*n + 1;
+        ++L;
+    }
+    return L;
+}
+//备忘录进行多次计算，存储方便以后调用
+size_t memory_calculate(vector<size_t>& V, size_t n)
+{
+    size_t D = 0; //偏移量；如果n不在向量V的下标范围之内, 先转换到合理范围之内并计算偏移D.
+    while (n >= V.size())
+    {
+        (n%2 == 0)?n /= 2: 3*n + 1;
+        ++ D;
+    }
+    if (V[n] == 0 && n >0) //对V[n]进行赋值, 注意此处n在向量V的下标范围之内, 直接递归加1赋值即可
+        V[n] = memory_calculate(V, (n%2 == 0)?n /= 2: 3*n + 1)+1;
+    //返回值是原有的n对应的序列长度, 应加上偏移量D.
+    return V[n] + D;
+}
+
+int main()
+{
+  // 利用备忘录保存已算出的值, 适合多次求解.
+  const size_t m = 10000;
+  vector<size_t> V(m, 0);
+  V[1] = 1;
+  // 测试迭代和备忘录计算结果是否一致, 测试范围为[1, max].
+  size_t max = 100000;
+  bool equal = true;
+  for (size_t n = 1; n <= max; ++n)
+    if (iterator_calculate(n) != memory_calculate(V, n))
+      equal = false;
+  cout << (equal ? "相符" : "不符") << endl;
+
+  return 0;
+}
+
