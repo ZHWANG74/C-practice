@@ -1,0 +1,44 @@
+//
+//  search.cpp
+//  practing c++
+//
+//  Created by 呆呆 on 2022/9/25.
+//
+
+#include "search.hpp"
+#include<iostream>
+
+using namespace std;
+
+template <typename T>
+
+int linear_search_array(const T& key, const T data[], int N)
+{
+    for(int i = 0; i < N; ++i)
+    {
+        if(data[i] == key)
+            return i;
+    }
+    return N;
+}
+
+// 线性查找: 带有哨兵的数组版本. 要求data的长度大于n
+template <typename T>
+int linear_search_sentinel(const T& key, T data[], int n)
+{
+    data[n] = key;
+    int i = 0;
+    while(data[i] != key)
+        ++i;
+    return i;
+}
+
+
+int main()
+{
+  const int n = 5;
+  // 数组多留出一个位置作为哨兵, 但是初始化时只给出n个元素的初值.
+  int A[n + 1] = {3, 2, 1, 4, 5};
+  cout << linear_search_sentinel(9, A, n) << endl;
+  return 0;
+}
