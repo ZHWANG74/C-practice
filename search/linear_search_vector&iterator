@@ -1,0 +1,91 @@
+//
+//  search.cpp
+//  practing c++
+//
+//  Created by 呆呆 on 2022/9/25.
+//
+
+#include "search.hpp"
+#include<iostream>
+#include<vector>
+#include<string>
+#include<list>
+
+using namespace std;
+
+// 线性查找: 向量版本.
+template <typename T>
+size_t linear_search_vector(const T& key, const vector<T>& data)
+{
+    for(size_t i = 0; i < data.size(); ++i)
+        if(data[i] == key)
+            return i;
+    return data.size();
+        
+}
+
+// 线性查找: 以迭代器方式实现.
+template <typename T, typename iterator>
+iterator linear_search_iterator(const T& key, iterator L, iterator R)
+{
+    while(L != R)
+    {
+        if(*L == key)
+            return L;
+        ++ L;
+    }
+    return L;
+}
+
+// 线性查找: 以向量方式实现，加入哨兵
+template <typename T>
+size_t linear_search_vector_sentinel(const T& key, vector<T>& data)
+{
+    data.push_back(key);
+    size_t i = 0;
+    while (data[i] != key)
+      ++i;
+    // 恢复向量的原有长度.
+    data.pop_back();
+    return i;
+}
+
+
+// 线性查找: 带有哨兵的迭代器方式实现. 要求末尾单独留有空位.
+// 其最佳实现是在双循环链的哑结点位置直接放置哨兵, 不过这得由库函数实现.
+template <typename T, typename iterator>
+iterator linear_search_iterator_sentinel(const T& key, iterator L, iterator R)
+{
+    *R = key;
+    while (*L != key)
+      ++L;
+    return L;
+}
+
+
+
+int main()
+{
+  vector<string> V {"RSA", "Apple", "WWW", "While", "X"};
+  string key = "Apple";
+  cout << linear_search_vector(key, V) << endl;
+  cout << linear_search_vector_sentinel(key, V) << endl;
+  key = "Algorithm";
+  auto iter1 = linear_search_iterator(key, V.begin(), V.end());
+  if (iter1 == V.end())
+    cout << "Not Found!" << endl;
+  else
+    cout << *iter1 << endl;
+
+    
+// 使用这种方式查找要在前后加上push_back和pop_back语句.
+   list<string> L {"RSA", "Apple", "WWW", "While", "X"};
+   L.push_back(key);
+   auto f = --L.end();
+   auto iter2 = linear_search_iterator_sentinel(key, L.begin(), f);
+   if (iter2 != f)
+       cout << *iter2 << endl;
+   L.pop_back();
+   return 0;
+}
+
