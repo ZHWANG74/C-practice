@@ -1,0 +1,46 @@
+//
+//  set.cpp
+//  practing c++
+//
+//  Created by 呆呆 on 2022/9/26.
+//
+
+#include "set.hpp"
+#include<set>
+#include<iostream>
+#include<vector>
+using namespace std;
+
+int main()
+{
+    set<int> S {3, 2, 1, 4, 5};
+    int k;
+    cin >> k;
+    if(k < 1 || k > S.size())
+        cout << "out of range" << endl;
+    else
+    {
+        auto iter = S.begin();
+        for(int i = 0; i < k-1; ++i)
+            ++iter;
+        cout << *iter << endl;
+        
+        vector<int> V;
+        V.reserve(k-1);
+        for(int i = 0; i < k-1; ++i)
+        {
+            V.push_back(*S.begin());
+            S.erase(S.begin());
+        }
+        cout << *S.begin() << endl;
+        
+        
+        // 将前k - 1个元素放回S中, 也可对V使用基于范围的for循环.
+        // 最简单的方式是直接使用:
+        // S.insert(V.begin(), V.end());
+        for (size_t i = 0; i < V.size(); ++i)
+            S.insert(V[i]);
+    }
+
+    return 0;
+}
